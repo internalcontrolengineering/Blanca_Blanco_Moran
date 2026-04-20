@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Invitación 70 Años - Blanca Blanco Moran</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,500&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            background: #0a2a3a;
+            touch-action: manipulation;
+        }
+
+        /* Video de fondo */
+        .background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -3;
+            pointer-events: none;
+        }
+        
+        .overlay-dark {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* MODAL DEL SOBRE */
+        .envelope-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            cursor: pointer;
+        }
+
+        .envelope-modal.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Contenedor del sobre */
+        .envelope-container {
+            width: 90%;
+            max-width: 380px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* SOBRE */
+        .envelope {
+            position: relative;
+            width: 100%;
+            background: #f0dbb4;
+            border-radius: 8px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4);
+            transition: transform 0.1s ease;
+        }
+
+        .envelope:active {
+            transform: scale(0.98);
+        }
+
+        /* Cuerpo del sobre */
+        .envelope-body {
+            position: relative;
+            background: linear-gradient(145deg, #ecdbb8, #e0cfa8);
+            padding: 55px 25px 45px 25px;
+            text-align: center;
+            border-radius: 8px;
+            z-index: 1;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 1px 3px rgba(255,255,220,0.5);
+        }
+
+        .envelope-body::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 1px dashed #c8a86a;
+            border-radius: 6px;
+            pointer-events: none;
+        }
+
+        /* SOLAPA TRIANGULAR */
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 130px;
+            background: linear-gradient(145deg, #f5e6c8, #ecdbb8);
+            clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+            border-radius: 8px 8px 0 0;
+            z-index: 2;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top;
+            pointer-events: none;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* SELLO EN LA PARTE SUPERIOR */
+        .envelope-seal {
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #c46b2b, #e8934a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 26px;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.3);
+            z-index: 15;
+            pointer-events: none;
+            border: 2px solid rgba(255,245,200,0.7);
+        }
+
+        /* Texto dentro del sobre */
+        .envelope-text {
+            margin-top: 100px;
+        }
+
+        .envelope-text h3 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.0rem;
+            color: #8a5a2a;
+            margin-bottom: 10px;
+        }
+
+        .envelope-text p {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.6rem;
+            color: #8a5a2a;
+            margin-bottom: 18px;
+        }
+
+        .tap-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #8a5a2a;
+            font-weight: 600;
+            background: rgba(255,245,210,0.9);
+            padding: 10px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(4px);
+        }
+
+        .tap-hint i {
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Solapa ABIERTA */
+        .envelope-modal.open .envelope-flap {
+            transform: rotateX(180deg);
+            background: linear-gradient(145deg, #e0c898, #d4bc84);
+        }
+
+        /* Contenido principal (invitación) */
+        .main-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.7s ease, visibility 0.7s ease;
+        }
+
+        .main-content.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Tarjeta de invitación */
+        .invitation-card {
+            max-width: 550px;
+            width: 95%;
+            margin: 1rem auto;
+            border-radius: 1.8rem;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 248, 235, 0.94);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #FFB7B2, #FFD6A5, #FDFFB6);
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: #5e2e2e;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            font-size: 0.95rem;
+            font-weight: 600;
+            background: rgba(255, 245, 215, 0.95);
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            color: #a1532c;
+        }
+
+        .mensaje-principal {
+            background: #fff2df;
+            margin: 1rem 0.8rem 0rem 0.8rem;
+            padding: 1rem;
+            border-radius: 1.2rem;
+            border-left: 5px solid #ff8c42;
+            font-weight: 700;
+            text-align: center;
+            font-size: 1rem;
+            color: #b9511b;
+        }
+
+        .frase-completa {
+            background: #fff7ec;
+            margin: 1rem 0.8rem;
+            padding: 0.9rem;
+            border-radius: 1.2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #5a3a2a;
+            border: 1px solid #ffddb0;
+            line-height: 1.5;
+        }
+
+        .contenido {
+            padding: 0.8rem;
+        }
+
+        .details {
+            background: #FFF7E8;
+            border-radius: 1.2rem;
+            padding: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .detail-item i {
+            color: #f4a261;
+            width: 24px;
+            font-size: 1rem;
+        }
+
+        .highlight {
+            background: #ffe0b5;
+            border-radius: 1.2rem;
+            padding: 0.2rem 0.6rem;
+            font-weight: 700;
+            color: #b45f2b;
+        }
+
+        .direccion {
+            background: #fff1e0;
+            margin-top: 8px;
+            border-radius: 1rem;
+            padding: 0.7rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .map-section {
+            margin: 1rem 0;
+            background: #fef3e2;
+            border-radius: 1.2rem;
+            padding: 0.8rem;
+        }
+
+        .map-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            color: #b45f2b;
+        }
+
+        .map-responsive {
+            border-radius: 1rem;
+            overflow: hidden;
+            height: 180px;
+            margin-bottom: 8px;
+        }
+
+        .map-responsive iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .map-link {
+    text-align: center;
+}
+
+.map-link a {
+    background: #ffbc6e;
+    padding: 6px 15px;
+    border-radius: 40px;
+    text-decoration: none;
+    color: #4b2e1e;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+}
+
+        /* CONTADOR */
+        .countdown-section {
+            background: #fff4e8;
+            margin: 1rem 0.8rem;
+            padding: 0.8rem;
+            border-radius: 1.2rem;
+            text-align: center;
+        }
+
+        .countdown-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #b45f2b;
+            margin-bottom: 8px;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: #ffe0b5;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.7rem;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .countdown-number {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #c46b2b;
+        }
+
+        .countdown-label {
+            font-size: 0.55rem;
+            color: #a0693a;
+        }
+
+        .gallery {
+    margin: 1rem 0;
+    text-align: center; /* Centra todo el contenido */
+}
+
+.gallery h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.6rem;
+    color: #b45f2b;
+    border-left: 4px solid #ffb347;
+    padding-left: 10px;
+    text-align: left; /* El título mantiene su estilo original */
+}
+
+.gallery-grid {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;
+    background: #fffaef;
+    border-radius: 1.2rem;
+    padding: 0.7rem;
+}
+
+.gallery-img {
+    max-width: 70%; /* O el porcentaje que prefieras */
+    border-radius: 1rem;
+    width: auto;
+    border: 3px solid #ffe0b3;
+    display: block;
+    margin: 0 auto; /* Centra la imagen */
+}
+
+        .confirmacion {
+            background: #ffedd5;
+            border-radius: 1.2rem;
+            padding: 0.9rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .btn-wa {
+            background: #25D366;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 0.95rem;
+            padding: 10px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .mensaje-bonito {
+            background: #fff9f0;
+            border-radius: 1.2rem;
+            padding: 0.9rem;
+            margin: 1rem 0;
+        }
+
+        .mensaje-bonito textarea {
+            width: 100%;
+            border-radius: 1rem;
+            border: 2px solid #ffd89a;
+            padding: 10px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.85rem;
+            resize: vertical;
+            margin: 8px 0;
+        }
+
+        .btn-enviar {
+            background: #ffb347;
+            border: none;
+            color: #4b2e1e;
+            font-weight: bold;
+            padding: 10px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 0.7rem;
+            background: #fff2e2;
+            color: #b48b5a;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+        }
+
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #ff8c42;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            color: white;
+            font-size: 1.2rem;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <video class="background-video" autoplay loop muted playsinline>
+        <source src="https://res.cloudinary.com/dkc3irbdr/video/upload/q_auto/f_auto/v1776318556/CangrejitoPlayeroVideo_p3cv7y.mp4" type="video/mp4">
+    </video>
+    <div class="overlay-dark"></div>
+
+    <!-- SOBRE CON SELLO EN LA PARTE SUPERIOR -->
+    <div class="envelope-modal" id="envelopeModal">
+        <div class="envelope-container">
+            <div class="envelope">
+                <div class="envelope-flap"></div>
+                <div class="envelope-seal">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="envelope-body">
+                    <div class="envelope-text">
+                        <h3>¡Tienes una invitación!</h3>
+                        <p>Cumpleaños 70</p>
+			<p>Blanca Blanco Moran</p>
+                        <div class="tap-hint">
+                            <i class="fas fa-hand-pointer"></i>
+                            <span>Toca para abrir el sobre</span>
+                            <i class="fas fa-envelope-open-text"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INVITACIÓN COMPLETA -->
+    <div class="main-content" id="mainContent">
+        <button class="music-btn" id="musicBtn">
+            <i class="fas fa-music"></i>
+        </button>
+
+        <div class="invitation-card">
+            <div class="hero">
+                <h1>🎉 Mis 70 Primaveras 🎉</h1>
+            </div>
+
+                <div class="gallery">
+    <h3 style="text-align: center;">Blanca Blanco Moran</h3>
+    <div class="gallery-grid"><img class="gallery-img" src="https://raw.githubusercontent.com/internalcontrolengineering/Desarrollos/main/Blanca%20Blanco.jpeg" alt="Blanca Estela Blanco Moran"></div>
+    <p style="text-align:center; margin-top: 6px; font-size:0.75rem;">✨ Un momento muy especial ✨</p>
+</div>
+
+            <div class="mensaje-principal">
+                ❤️ ¡Y ESTO MERECE CELEBRARSE! ❤️
+            </div>
+
+            <div class="contenido">
+                <div class="frase-completa">                    
+                    🎈 <strong>¡ESPERO CONTAR CON SU PRESENCIA MI HERMOSA FAMILIA!</strong> 🎈
+                </div>
+
+                <div class="details">
+                    <div class="detail-item"><i class="fas fa-calendar-alt"></i><span><span class="highlight">🗓️ 6 de Junio</span> | 5:00 PM</span></div>
+                    <div class="detail-item"><i class="fas fa-hourglass-half"></i><span>Hasta que nos corran del local... ¡la fiesta no tiene límite!</span></div>
+
+                <!-- CONTADOR -->
+                <div class="countdown-section">
+                    <div class="countdown-title"><i class="fas fa-hourglass-half"></i> ¡Faltan!</div>
+                    <div class="countdown" id="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="days">00</div>
+                            <div class="countdown-label">Días</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="hours">00</div>
+                            <div class="countdown-label">Horas</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="minutes">00</div>
+                            <div class="countdown-label">Minutos</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="seconds">00</div>
+                            <div class="countdown-label">Segundos</div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="map-section">
+                    <div class="map-title"><i class="fas fa-map-marked-alt"></i> ¿Cómo llegar?</div>
+                    <div class="map-responsive">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4424.251470471992!2d-86.85254002341772!3d21.17875955219014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f4c2d0028d0948d%3A0xe34445ce5a297e4e!2sSaloncito%20Jade!5e0!3m2!1ses-419!2smx!4v1776653427231!5m2!1ses-419!2smx" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+
+                    <div class="direccion"><i class="fas fa-location-dot"></i> <strong>Dirección:</strong> REG 229, Supermanzana 229 Manzana 5 Lote 18, 77516 Cancún, Q.R. </div>
+                </div>
+
+                    <div class="map-link"><a href="https://maps.app.goo.gl/h2nghK25RRyR7z6y7" target="_blank"><i class="fas fa-directions"></i> Abrir en Google Maps 📍</a></div>
+                </div>
+
+
+                <div class="confirmacion">
+                    <h3><i class="fab fa-whatsapp"></i> Pulsa el boton verde para confirmar tu asistencia</h3>
+                    <a id="waConfirmBtn" href="#" target="_blank" style="text-decoration: none;"><button class="btn-wa"><i class="fab fa-whatsapp"></i> Enviar confirmación</button></a>
+                </div>
+
+                <div class="mensaje-bonito">
+                    <h3></i> 💌 ¡Envía un mensaje bonito a la cumpleañera!</h3>
+                    <textarea id="mensajePersonal" rows="3" placeholder="Ejemplo: ¡Feliz cumpleaños Blanquita!"></textarea>
+                    <button id="enviarMensajeBtn" class="btn-enviar"><i class="fab fa-whatsapp"></i> Enviar mensaje</button>
+                    <!--<p style="font-size: 11px; margin-top: 6px;">*El mensaje se enviará por WhatsApp con tu texto personalizado.</p>
+                </div>-->
+
+<!-- VIDEO CON REPRODUCCIÓN AUTOMÁTICA SIN AUDIO -->
+<div class="video-section" style="margin: 1rem auto; border-radius: 1.2rem; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); background: #000; width: 250px;">
+    <video autoplay muted loop playsinline preload="auto" style="width: 100%; display: block; border-radius: 1.2rem;">
+        <source src="https://res.cloudinary.com/dkc3irbdr/video/upload/q_auto/f_auto/v1776318556/CangrejitoPlayeroVideo_p3cv7y.mp4" type="video/mp4">
+        Tu navegador no soporta la reproducción de videos.
+    </video>
+    <p style="text-align: center; padding: 8px; background: #fff2df; margin: 0; font-size: 0.75rem; color: #b45f2b;">
+        🎉 ¡A BAILAR SE HA DICHO 🎉
+    </p>
+</div>
+
+
+                <footer style="display: none;">
+                    <i class="fas fa-umbrella-beach"></i> ¡Celebración playera para Blanca! <i class="fas fa-sun"></i>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ==================== WHATSAPP ====================
+            const TELEFONO = "529992712895";
+            function linkWA(texto) {
+                return `https://wa.me/${TELEFONO}?text=${encodeURIComponent(texto.trim())}`;
+            }
+            
+            const waBtn = document.getElementById('waConfirmBtn');
+            if (waBtn) waBtn.href = linkWA("¡Confirmo Asistencia!");
+            
+            const enviarBtn = document.getElementById('enviarMensajeBtn');
+            const textarea = document.getElementById('mensajePersonal');
+            if (enviarBtn) {
+                enviarBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    let msg = textarea.value.trim();
+                    if (!msg) msg = "¡Feliz cumpleaños Blanquita! 🎂🎈";
+                    else msg = "" + msg;
+                    window.open(linkWA(msg), '_blank');
+                });
+            }
+
+            // ==================== COUNTDOWN ====================
+            // Fecha del evento: 6 de junio de 2026 a las 17:00 (5:00 PM)
+            function updateCountdown() {
+                const eventDate = new Date(2026, 5, 6, 17, 0, 0);
+                const now = new Date();
+                const diff = eventDate - now;
+
+                if (diff <= 0) {
+                    document.getElementById('days').innerText = '00';
+                    document.getElementById('hours').innerText = '00';
+                    document.getElementById('minutes').innerText = '00';
+                    document.getElementById('seconds').innerText = '00';
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (86400000)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (3600000)) / (1000 * 60));
+                const seconds = Math.floor((diff % (60000)) / 1000);
+
+                document.getElementById('days').innerText = days.toString().padStart(2, '0');
+                document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+            }
+
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+
+            // ==================== MÚSICA ====================
+const audio = new Audio('https://res.cloudinary.com/dkc3irbdr/video/upload/q_auto/f_auto/v1776656288/CangrejitoPlayeroMusica_qhpqdo.mp4');
+audio.preload = 'auto';
+let isPlaying = false;
+
+// Evento para cuando termine la música, reproducirla de nuevo
+audio.addEventListener('ended', function() {
+    if (isPlaying) {
+        audio.play().catch(e => console.log('Error al reiniciar música:', e));
+    }
+});
+
+            const musicBtn = document.getElementById('musicBtn');
+            
+            function startMusic() {
+                if (isPlaying) return;
+                audio.play().then(() => {
+                    isPlaying = true;
+                    if (musicBtn) {
+                        musicBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                        musicBtn.style.background = '#25D366';
+                    }
+                }).catch(e => console.log('Error al reproducir música:', e));
+            }
+
+            function stopMusic() {
+                if (!isPlaying) return;
+                audio.pause();
+                isPlaying = false;
+                if (musicBtn) {
+                    musicBtn.innerHTML = '<i class="fas fa-music"></i>';
+                    musicBtn.style.background = '#ff8c42';
+                }
+            }
+
+            if (musicBtn) {
+                musicBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (isPlaying) stopMusic();
+                    else startMusic();
+                });
+            }
+
+            // ==================== ABRIR SOBRE ====================
+            const modal = document.getElementById('envelopeModal');
+            const mainContent = document.getElementById('mainContent');
+            let isAnimating = false;
+
+            function abrirSobre() {
+                if (isAnimating) return;
+                isAnimating = true;
+                
+                modal.classList.add('open');
+                
+                setTimeout(() => {
+                    modal.classList.add('hide');
+                    mainContent.classList.add('visible');
+                    startMusic();
+                    isAnimating = false;
+                }, 500);
+            }
+
+            if (modal) {
+                modal.addEventListener('click', abrirSobre);
+                modal.addEventListener('touchstart', abrirSobre);
+            }
+        })();
+    </script>
+</body>
+</html>
